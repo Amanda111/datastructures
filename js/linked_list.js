@@ -10,6 +10,7 @@ var makelist = function list(){
 	this.append = append;
 	this.indexOf = indexOf;
 	this.remove = remove;
+	this.insert = insert;
 }
 
 function append(element){
@@ -62,10 +63,34 @@ function remove(element){
 	}
 }
 
+function insert(position,element){
+	if(position >-1 && position < this.length){
+		var node = new Node(element);
+		var current = this.head;
+		var previous;
+		var i = 0;
+		if (position == 0) {
+			node.next = current;
+			head = node;
+		}else{
+			while(i++ < position){
+				previous = current;
+				current = current.next;
+			}
+			previous.next = node;
+			node.next = current;
+		}
+		this.length++;
+	}else{
+		return false;
+	}
+}
+
 var list = new makelist();
 list.append("haha")
 list.append("lala")
 list.append("wawa")
+list.insert(1,"aaaa")
 console.log(list.remove("wawa"))
 console.log(list)
 // console.log(list.indexOf("wawa"))
