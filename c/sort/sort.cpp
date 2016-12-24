@@ -39,24 +39,6 @@ void ShellSort(ElemType A[],int n,int d[],int num){
 	}
 }
 
-void main()
-{
-	int a[N];
-	int num = 10;
-	int arr[] = {5000,2500,1250,625,400,200,100,25,2,1};
-	for(int i=0;i<N;i++){
-		a[i] = rand();
-	}
-    long beginTime =clock();
-	ShellSort(a,N,arr,num);
-	long endTime =clock();
-	long time = endTime - beginTime;
-	cout<<time<<endl;
-    cin>>i;
- }	
-
-
-
 void SelectSort(ElemType A[], int n){
 	int i,j,min;
 	ElemType temp;
@@ -92,6 +74,119 @@ void BubbleSort(ElemType A[], int n){
 	}
 }
 
+
+//HeapSort
+void AdjustHeap(ElemType A[], int n,int k){
+	int i,j,flag;
+	ElemType temp;
+	i = k;
+	j = 2*i+1;
+	temp=A[i];
+	flag = 0;
+	while(j<n&&flag!=1){
+		if(j<n-1&&A[j]<A[j+1])j++;
+		if(temp>=A[j]){
+			flag = 1;
+		}else{
+			A[i] = A[j];
+			i = j;
+			j=2*i+1;
+		}
+	}
+	A[i] = temp;
+}
+void CreatInitHeap(ElemType A[],int n){
+	for(int i = (n-2)/2;i>=0;i--){
+		AdjustHeap(A,n,i);
+	}
+}
+
+void HeapSort(ElemType A[],int n){
+	int i;
+	ElemType temp;
+	CreatInitHeap(A,n);
+	for(i=n-1;i>0;i--){
+		temp = A[0];
+		A[0] = A[i];
+		A[i] = temp;
+		AdjustHeap(A,i,0);
+	}
+}
+
+//QuickSort
+void QuickSort(ElemType A[], int low,int high){
+	int i,j;
+	ElemType temp;
+	i = low;
+	j = high;
+	temp = A[low];
+	while(i<j){
+		while(i<j&&A[j]>=temp)j--;
+		if(i<j){
+			A[i] = A[j];
+			i++;
+		}
+		while(i<j&&A[i]<temp)i++;
+		if(i<j){
+			A[j] = A[i];
+			j--;
+		}
+	}
+	A[i] = temp;
+	if(low < i-1) QuickSort(A,low,i-1);
+	if(j+1<high) QuickSort(A,j+1,high);
+}
+
+//MergeSort
+void TwoMerge(ElemType A[],ElemType Swap[],int low,int m,int high){
+	int i,j,k;
+	i = low;
+	j = m+1;
+	k = low;
+	while(i<=m&&j<=high){
+		if(A[i]<=A[j]){
+			Swap[k++] = A[i++];
+		}else{
+			Swap[k++] = A[j++];
+		}
+		while(i<=m){
+			Swap[k++] = A[i++];
+		}
+		while(j<=high){
+			Swap[k++] = A[j++];
+		}
+	}
+}
+
+void MergePass(ElemType A[],ElemType Swap[],int n,int len){
+	int p = 0;
+	while(p+2*len-1<=n-1){
+		TwoMerge(A,Swap,p,p+len-1,p+2*len-1);
+		p+=2*len;
+	}
+	if(p+len-1<n-1){
+		TwoMerge(A,Swap,p,p+len-1,n-1);
+	}else{
+		for(int i = p;i<=n-1;i++){
+			Swap[i] = A[i];
+		}
+	}
+}
+
+void MergeSort(ElemType A[],int n){
+	int len = 1;
+	ElemType * Swap;
+	Swap = (ElemType *)malloc(sizeof(ElemType)*n);
+	while(len<n){
+		MergePass(A,Swap,n,len);
+		len = 2*len;
+		MergePass(Swap,A,n,len);
+		len = 2*len;
+	}
+	free(Swap);
+}
+
+
 void main()
 {
 	int a[N];
@@ -103,6 +198,8 @@ void main()
 	// int num = 10;
 	// int arr[] = {5000,2500,1250,625,400,200,100,25,2,1};
     //Sort method
+    //QuickSort
+    /*QuickSort(a,0,N-1);*/
 	BubbleSort(a, N);
 	long endTime =clock();
 	long time = endTime - beginTime;
